@@ -5,30 +5,15 @@ import { Link } from 'react-router-dom';
 
 export default function List() {
   const { loading, error, data } = useQuery(GET_POKEMON);
-  // const POKEMON_LIST_QUERY = `query MyQuery {
-  //   gen3_species: pokemon_v2_pokemonspecies(where: {pokemon_v2_generation: {}}, order_by: {id: asc}) {
-  //     name
-  //     id
-  //   }
-  // }`;
-  // const POKEMON_LIST_QUERY = gql`query MyQuery {
-  //   gen3_species: pokemon_v2_pokemonspecies(where: {pokemon_v2_generation: {}}, order_by: {id: asc}) {
-  //     name
-  //     id
-  //   }
-  // }`;
-  
 
   const [pokemon, setPokemon] = useState([]);
 
   useEffect(() => {
+    // console.log(data);
     if(loading === false){
-      setPokemon( data.gen3_species );
+      setPokemon( data.pokemon_v2_pokemon );
     }
-    // setTimeout(console.log(data), 5000);
-    
-
-  }, [loading]);
+  }, [loading, data]);
 
   return (
     <div className='container'>
