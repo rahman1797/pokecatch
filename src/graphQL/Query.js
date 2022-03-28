@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_POKEMON = gql`
 query MyQuery {
-  pokemon_v2_pokemon(order_by: {id: asc}) {
+  pokemon_v2_pokemon(limit: 50, order_by: {id: asc}) {
     name
     id
   }
