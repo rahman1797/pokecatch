@@ -2,40 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_DETAIL_POKEMON } from "../graphQL/Query";
 import { useParams, useNavigate } from "react-router-dom";
-
-import { css, cx } from '@emotion/css'
-
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-import pickachu from '../assets/images/pickachu.png'
 import Swal from "sweetalert2";
 
 export default function Detail() {
 
-  const POKEMON_NAME = useParams();
-  // alert(POKEMON_NAME);
+  //Init state
+  const [pokemon, setPokemon] = useState(null);
+
+  const POKEMON_NAME = useParams(); //Get parameter "name"
+
+  //Get data from API with filtering
   const { loading, error, data } = useQuery(GET_DETAIL_POKEMON, {
     variables: { name: POKEMON_NAME.name }
   });
-
-  const [pokemon, setPokemon] = useState(null);
   
-  console.log(My_Pokemon);
+  var My_Pokemon = JSON.parse(localStorage.getItem("my_pokemon") || "[]");
+
   useEffect(() => {
     if(loading === false){
-      setTimeout(() => {
-        setPokemon(data.pokemon_v2_pokemon[0]);
-      }, 0);
-      
+      setPokemon(data.pokemon_v2_pokemon[0]);
     }
-    // setTimeout(console.log(data), 5000);
   }, [loading, data]);
 
   const catch_pokemon = () => {
-    let number = Math.floor(Math.random() * 101);
+    let number = Math.floor(Math.random() * 101); //Random number from 0 - 100
     if(number >= 50){
-
       Swal.fire({
         icon: 'success',
         title: 'Yeay you got them',
@@ -48,17 +41,26 @@ export default function Detail() {
         showLoaderOnConfirm: true,
         preConfirm: (poke_name) => {
 
+          //collect the data
           let data = {
             id: pokemon.id,
-            name: poke_name
+            name: poke_name,
+            base_experience: pokemon.base_experience,
+            type: pokemon.pokemon_v2_pokemontypes,
+            move: pokemon.pokemon_v2_pokemonmoves
           };
 
+          //add to array
           My_Pokemon.push(data);
 
           localStorage.setItem('my_pokemon', JSON.stringify(My_Pokemon));
-
-          // console.log(data);
         },
+      }).then(() => {
+        Swal.fire(
+          'Saved!',
+          'Your pokemon has been collected.',
+          'success'
+        )
       });
     } else {
       Swal.fire({
@@ -73,7 +75,6 @@ export default function Detail() {
     <section className='detail'>
       <div className='container d-flex'>
         {
-          
           // pokemon !== null ?
           <div className='card mx-auto card-poke-detail'>
             {
@@ -84,7 +85,11 @@ export default function Detail() {
             }
             <h1 className='text-center'>
               { pokemon !== null ? pokemon.name : <Skeleton count={1} /> }
+              
             </h1>
+            <p className='text-center'>
+            { pokemon !== null ? 'Base Exp. ' + pokemon.base_experience : <Skeleton count={1} /> }
+            </p>
             <h5 className='mt-3'>Types</h5>
             <div className='container row'>
             {
@@ -92,7 +97,7 @@ export default function Detail() {
               pokemon.pokemon_v2_pokemontypes.map(obj => {
 
                 return (
-                  <div key={obj.name} className='alert-poke-detail text-center mx-1'>
+                  <div key={obj.id} className='alert-poke-detail text-center mx-1'>
                     {obj.pokemon_v2_type.name}
                   </div>
                 )
@@ -109,7 +114,7 @@ export default function Detail() {
               pokemon.pokemon_v2_pokemonmoves.map((obj, index) => {
                 if(index < 6) {
                   return (
-                    <div key={obj.name} className='alert-poke-detail text-center m-1'>
+                    <div key={obj.id} className='alert-poke-detail text-center m-1'>
                       { obj.pokemon_v2_move.name }
                     </div>
                   )

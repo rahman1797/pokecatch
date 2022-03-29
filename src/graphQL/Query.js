@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const GET_POKEMON = gql`
-query MyQuery {
-  pokemon_v2_pokemon(limit: 50, order_by: {id: asc}) {
+query MyQuery($limit: Int! ) {
+  pokemon_v2_pokemon(limit: $limit, order_by: {id: asc}) {
     name
     id
+    base_experience
   }
 }
 `;
@@ -23,6 +24,7 @@ export const GET_DETAIL_POKEMON = gql`
     pokemon_v2_pokemon(limit: 1, where: {name: {_similar: $name}}) {
       id
       name
+      base_experience
       pokemon_v2_pokemontypes {
         pokemon_v2_type {
           name

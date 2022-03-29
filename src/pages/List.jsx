@@ -2,16 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_POKEMON } from "../graphQL/Query";
 import { Link } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import { css } from '@emotion/css'
 
 export default function List() {
-  const { loading, error, data } = useQuery(GET_POKEMON);
 
   const [pokemon, setPokemon] = useState([]);
+  const [limit, setLimit] = useState(30);
+
+  const { loading, error, data } = useQuery(GET_POKEMON, {
+    variables: { limit: limit }
+  });
+
+  //Show more
+  const more_limit = () => {
+    setLimit(limit + 15);
+  }
 
   useEffect(() => {
-    // console.log(data);
+
     if(loading === false){
       setPokemon( data.pokemon_v2_pokemon );
     }
@@ -19,25 +30,30 @@ export default function List() {
 
   return (
     <section className='list'>
-      <div className='container'>
-        <h3 className='text-center'>{`Found ${pokemon.length} pokemons`}</h3>
+      <div className='container pt-3'>
+        <h4 className='text-center'>{pokemon.length !== 0 ? `Found ${pokemon.length} pokemons` : <Skeleton count={1} className='bg-light' />}</h4>
+        <input className='form-control' placeholder='Find pokemon...' />
         <div className='row'>
           
-          <hr/>
           {pokemon.map(obj => {
             return (
-              <Link className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
+              <Link key={obj.id} className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
                   <div className='card-poke-list'>
                     
                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${obj.id}.svg`} className={`mx-auto poke-img`} />
                     <p className={css`
                       margin-top: 30px;
-                    `}>{obj.name}</p>
+                    `}><strong>{obj.name}</strong></p>
+                    <p>
+                      Base Exp. {obj.base_experience}
+                    </p>
                   </div>
               </Link>
             )
-            
           })}
+        </div>
+        <div className='row'>
+          <button className='btn btn-info-gradient text-light mx-auto mt-2' onClick={more_limit}>{loading === false ? 'Show more...' : 'Please wait...'}</button>
         </div>
       </div>
     </section>

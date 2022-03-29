@@ -1,17 +1,22 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
+import { Link } from 'react-router-dom';
 
 //Images
-import pokeball from '../assets/images/pokeball.png';
+import pokemon from '../assets/images/pokemon.png';
+import pokeball from '../assets/images/pokeball1.png';
 
 export default function Home() {
   return (
-    <div className='container'>
-        <div className='row'>
-            <div className='col-md-8'>
-                <img src={pokeball} className='pokeball' />
-            </div>
-        </div>
-    </div>
+    <section className='home'>
+      <div className='container'>
+          <div className='row'>
+            <img src={pokemon} className='mt-5 mx-auto' />
+            <img src={pokeball} className='my-5 pokeball mx-auto' />
+          </div>
+          <div className='row'>
+            <Link className='mt-5 btn btn-lg btn-home-gradient mx-auto' to={'/list'}>Let's Catch em all</Link>
+          </div>
+      </div>
+    </section>
   )
 }

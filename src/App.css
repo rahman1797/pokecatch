@@ -1,4 +1,12 @@
-section.list {
+section.home {
+  min-height: 100vh;
+  background-color: rgb(86,192,209);
+  background-color: -moz-linear-gradient(0deg, rgba(86,192,209,1) 0%, rgba(129,210,223,1) 100%);
+  background-color: -webkit-linear-gradient(0deg, rgba(86,192,209,1) 0%, rgba(129,210,223,1) 100%);
+  background-color: linear-gradient(0deg, rgba(86,192,209,1) 0%, rgba(129,210,223,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#56c0d1",endColorstr="#81d2df",GradientType=1);
+}
+section.list, section.mylist {
   background-color: rgba(221, 221, 221, 0.295);
   min-height: 100vh;
   background: rgb(176, 243, 255);
@@ -36,6 +44,22 @@ body{
   z-index: 1;
 }
 
+.form-control {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 1px 1px 10px rgb(151, 202, 218);
+}
+
+.btn-home-gradient {
+  color: rgb(59, 59, 59);
+  border-radius: 20px;
+  background: rgb(255,204,0);
+  background: rgb(255,204,0);
+  background: -moz-linear-gradient(59deg, rgba(255,204,0,1) 0%, rgba(255,215,57,1) 100%);
+  background: -webkit-linear-gradient(59deg, rgba(255,204,0,1) 0%, rgba(255,215,57,1) 100%);
+  background: linear-gradient(59deg, rgba(255,204,0,1) 0%, rgba(255,215,57,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcc00",endColorstr="#ffd739",GradientType=1);}
+
 .btn-info-gradient {
   color: white;
   border-radius: 20px;
@@ -44,6 +68,15 @@ body{
   background: -webkit-linear-gradient(146deg, rgba(23,162,184,1) 0%, rgba(69,204,225,1) 100%);
   background: linear-gradient(146deg, rgba(23,162,184,1) 0%, rgba(69,204,225,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#17a2b8",endColorstr="#45cce1",GradientType=1);
+}
+.btn-danger-gradient {
+  color: white;
+  border-radius: 20px;
+  background: rgb(219,53,87);
+  background: -moz-linear-gradient(59deg, rgba(219,53,87,1) 0%, rgba(255,31,77,1) 100%);
+  background: -webkit-linear-gradient(59deg, rgba(219,53,87,1) 0%, rgba(255,31,77,1) 100%);
+  background: linear-gradient(59deg, rgba(219,53,87,1) 0%, rgba(255,31,77,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#db3557",endColorstr="#ff1f4d",GradientType=1);
 }
 
 .list-layout{
@@ -112,13 +145,13 @@ header a:hover {
 }
 
 .pokeball {
-  height: 40vmin;
+  height: 20vh;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .pokeball {
-    animation: App-logo-spin infinite 1s linear;
+    animation: App-logo-spin infinite 10s linear;
   }
 }
 
