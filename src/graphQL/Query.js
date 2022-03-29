@@ -9,6 +9,15 @@ query MyQuery {
 }
 `;
 
+export const MY_POKEMON = gql`
+query MyQuery ($id: String!) {
+  pokemon_v2_pokemon(where: {id: {_similar: $id}}, order_by: {id: asc}) {
+    name
+    id
+  }
+}
+`;
+
 export const GET_DETAIL_POKEMON = gql`
   query MyQuery ($name: String!) {
     pokemon_v2_pokemon(limit: 1, where: {name: {_similar: $name}}) {

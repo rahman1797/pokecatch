@@ -1,10 +1,13 @@
 section.list {
   background-color: rgba(221, 221, 221, 0.295);
-  /* background: rgb(182,238,247);
-  background: -moz-linear-gradient(0deg, rgba(182,238,247,1) 0%, rgba(210,250,255,1) 60%);
-  background: -webkit-linear-gradient(0deg, rgba(182,238,247,1) 0%, rgba(210,250,255,1) 60%);
-  background: linear-gradient(0deg, rgba(182,238,247,1) 0%, rgba(210,250,255,1) 60%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#b6eef7",endColorstr="#d2faff",GradientType=1); */
+  min-height: 100vh;
+  background: rgb(176, 243, 255);
+  background: -moz-linear-gradient(0deg, rgb(198, 244, 252) 0%, rgb(165, 231, 240) 60%);
+  background: -webkit-linear-gradient(0deg, rgba(198, 244, 252,1) 0%, rgba(165, 231, 240) 60%);
+  background: linear-gradient(0deg, rgba(198, 244, 252,1) 0%, rgba(165, 231, 240,1) 60%);
+}
+section.list .container {
+  padding-bottom: calc(2em + 60px);
 }
 section.detail {
   min-height: 100vh;
@@ -20,12 +23,14 @@ body{
   font-size: 1em;
 }
 .header {
+  font-size: 14px;
+  border-top: 1px solid rgba(155, 155, 155, 0.247);
   padding: 0.5em;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   position: fixed;
   bottom: 0px;
-  height: 55px;
+  height: 65px;
   width: 100vw;
   background-color: white;
   z-index: 1;
@@ -41,8 +46,13 @@ body{
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#17a2b8",endColorstr="#45cce1",GradientType=1);
 }
 
+.list-layout{
+  padding: 5px !important;
+}
+
 .detail-img {
   width: 60%;
+  max-width: 200px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 15px;
@@ -50,24 +60,66 @@ body{
 }
 .poke-img {
   width: 70%;
+  height: 100px;
 }
 .card {
   border-radius: 12px;
 }
 .card-poke-list {
+  transition: all 0.3s ease-in-out;
   height: auto;
+  min-height: 180px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.836);
+}
+.card-poke-list:hover {
+  transform: translateY(-10px);
+  background-color: rgba(232, 255, 218, 0.863);
 }
 .card-poke-detail {
   margin-top: 8rem;
+  min-width: 300px;
   height: auto;
   padding: 0.8em;
-  margin-bottom: calc(2em + 55px);
+  margin-bottom: calc(2em + 60px);
 }
 .alert-poke-detail {
   border-radius: 15px;
   width: auto;
   padding: 10px;
   background-color: rgba(88, 243, 243, 0.2);
+}
+
+a { 
+  text-decoration: none;
+  color: rgb(56, 56, 56);
+}
+a:hover {
+  text-decoration: none;
+}
+header a {
+  color: rgb(63, 63, 63);
+}
+header a:hover {
+  text-decoration: none;
+  color: rgb(23,162,184);
+  color: -moz-linear-gradient(146deg, rgba(23,162,184,1) 0%, rgba(69,204,225,1) 100%);
+  color: -webkit-linear-gradient(146deg, rgba(23,162,184,1) 0%, rgba(69,204,225,1) 100%);
+  color: linear-gradient(146deg, rgba(23,162,184,1) 0%, rgba(69,204,225,1) 100%);
+}
+
+.pokeball {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pokeball {
+    animation: App-logo-spin infinite 1s linear;
+  }
 }
 
 @keyframes App-logo-spin {
@@ -78,3 +130,5 @@ body{
     transform: rotate(360deg);
   }
 }
+
+

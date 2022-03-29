@@ -3,6 +3,11 @@ import { useQuery } from "@apollo/client";
 import { GET_DETAIL_POKEMON } from "../graphQL/Query";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { css, cx } from '@emotion/css'
+
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import pickachu from '../assets/images/pickachu.png'
 import Swal from "sweetalert2";
 
@@ -16,12 +21,13 @@ export default function Detail() {
 
   const [pokemon, setPokemon] = useState(null);
   
+  console.log(My_Pokemon);
   useEffect(() => {
     if(loading === false){
-      // console.log(data.pokemon_v2_pokemon[0].name);
-      // console.log(data.pokemon_v2_pokemon[0].pokemon_v2_pokemontypes);
-      // console.log(data.pokemon_v2_pokemon[0]);
-      setPokemon(data.pokemon_v2_pokemon[0]);
+      setTimeout(() => {
+        setPokemon(data.pokemon_v2_pokemon[0]);
+      }, 0);
+      
     }
     // setTimeout(console.log(data), 5000);
   }, [loading, data]);
@@ -29,6 +35,7 @@ export default function Detail() {
   const catch_pokemon = () => {
     let number = Math.floor(Math.random() * 101);
     if(number >= 50){
+
       Swal.fire({
         icon: 'success',
         title: 'Yeay you got them',
@@ -40,9 +47,17 @@ export default function Detail() {
         confirmButtonText: 'Give name',
         showLoaderOnConfirm: true,
         preConfirm: (poke_name) => {
-          console.log(poke_name);
 
-          
+          let data = {
+            id: pokemon.id,
+            name: poke_name
+          };
+
+          My_Pokemon.push(data);
+
+          localStorage.setItem('my_pokemon', JSON.stringify(My_Pokemon));
+
+          // console.log(data);
         },
       });
     } else {
@@ -58,15 +73,22 @@ export default function Detail() {
     <section className='detail'>
       <div className='container d-flex'>
         {
-          pokemon !== null ?
-          <div className='card card-poke-detail'>
-            <img src={pickachu} className='detail-img' />
+          
+          // pokemon !== null ?
+          <div className='card mx-auto card-poke-detail'>
+            {
+              pokemon !== null ?
+              <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`} className='detail-img' />
+              :
+              <Skeleton circle height={100} width={100} className='mx-auto' />
+            }
             <h1 className='text-center'>
-              { pokemon.name }
+              { pokemon !== null ? pokemon.name : <Skeleton count={1} /> }
             </h1>
             <h5 className='mt-3'>Types</h5>
             <div className='container row'>
             {
+              pokemon !== null ?
               pokemon.pokemon_v2_pokemontypes.map(obj => {
 
                 return (
@@ -76,11 +98,14 @@ export default function Detail() {
                 )
                 
               })
+              :
+              <Skeleton count={2} width={200} />
             }
             </div>
             <h5 className='mt-3'>Moves</h5>
             <div className='container row'>
             {
+              pokemon !== null ?
               pokemon.pokemon_v2_pokemonmoves.map((obj, index) => {
                 if(index < 6) {
                   return (
@@ -92,16 +117,27 @@ export default function Detail() {
                 
                 
               })
+              :
+              <Skeleton count={2} width={200} />
             }
             
             </div>
-            <span className='text-center'>{ pokemon.pokemon_v2_pokemonmoves.length > 6 ? `and ${ pokemon.pokemon_v2_pokemonmoves.length - 6 } more` : '' }</span>
+            <span className='text-center my-2'>{ pokemon !== null ? (pokemon.pokemon_v2_pokemonmoves.length > 6 ? `and ${ pokemon.pokemon_v2_pokemonmoves.length - 6 } more` : '') : <Skeleton /> }</span>
 
             <button className='btn btn-info-gradient' onClick={catch_pokemon}>Catch now !</button>
             
           </div>
-          :
-          ''
+          // :
+          // <div className={css`
+          //   width: 400px;
+          //   border-radius: 20px;
+          //   height: 60vh;
+          //   background-color: white;
+          //   padding:20px;
+          //   margin-top: 8em;
+          //   margin-left: auto;
+          //   margin-right: auto;
+          // `}><Skeleton count={1} /></div>
         }
       </div>
     </section>

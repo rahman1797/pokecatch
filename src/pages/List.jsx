@@ -3,9 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POKEMON } from "../graphQL/Query";
 import { Link } from 'react-router-dom';
 
-import { css, cx } from '@emotion/css'
-
-import pickachu from '../assets/images/pickachu.png'
+import { css } from '@emotion/css'
 
 export default function List() {
   const { loading, error, data } = useQuery(GET_POKEMON);
@@ -28,12 +26,13 @@ export default function List() {
           <hr/>
           {pokemon.map(obj => {
             return (
-              <Link className='col-lg-2 col-md-3 col-sm-4 col-4 text-center' to={`/detail/${obj.name}`}>
-                  <div className='card card-poke-list p-1 my-1'>
-                    <img src={pickachu} className={`mx-auto poke-img`} />
-                    <span className={css`
-                      margin-top: 50px
-                    `}>{obj.name}</span>
+              <Link className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
+                  <div className='card-poke-list'>
+                    
+                    <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${obj.id}.svg`} className={`mx-auto poke-img`} />
+                    <p className={css`
+                      margin-top: 30px;
+                    `}>{obj.name}</p>
                   </div>
               </Link>
             )
