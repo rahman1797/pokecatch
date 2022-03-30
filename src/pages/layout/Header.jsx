@@ -12,7 +12,7 @@ export default function Header() {
             <Link to={'/'} className='row'>
               <MdOutlineHome className={'col-12 ' + css`
                 font-size: 30px
-              `} />
+              `} aria-hidden="true" />
               <span className='col-12'>Home</span>
             </Link>
           </div>
@@ -20,7 +20,7 @@ export default function Header() {
             <Link to={'/list'} className='row'>
               <FaSearchengin className={'col-12 ' + css`
                 font-size: 30px
-              `} />
+              `} aria-hidden="true" />
               <span className='col-12'>Search</span>
             </Link>
           </div>
@@ -28,7 +28,7 @@ export default function Header() {
             <Link to={'/my-list'} className='row'>
               <MdCatchingPokemon className={'col-12 ' + css`
                 font-size: 30px
-              `} />
+              `} aria-hidden="true" />
               <span className='col-12'>My Pokemon</span>
             </Link>
           </div>

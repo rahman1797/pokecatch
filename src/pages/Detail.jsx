@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_DETAIL_POKEMON } from "../graphQL/Query";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import Swal from "sweetalert2";
+import { css } from '@emotion/css'
+import pokeball from '../assets/images/pokeball1.png';
 
 export default function Detail() {
 
   //Init state
   const [pokemon, setPokemon] = useState(null);
+  const [catch_loading_animation, setCatch_loading_animation] = useState(false);
 
   const POKEMON_NAME = useParams(); //Get parameter "name"
 
@@ -18,70 +21,121 @@ export default function Detail() {
     variables: { name: POKEMON_NAME.name }
   });
   
+  //Get data from browser local storage
   var My_Pokemon = JSON.parse(localStorage.getItem("my_pokemon") || "[]");
 
   useEffect(() => {
     if(loading === false){
-      setPokemon(data.pokemon_v2_pokemon[0]);
+      setTimeout(() => {
+        setPokemon(data.pokemon_v2_pokemon[0]);
+      }, 200)
+      
     }
   }, [loading, data]);
 
   const catch_pokemon = () => {
     let number = Math.floor(Math.random() * 101); //Random number from 0 - 100
     if(number >= 50){
-      Swal.fire({
-        icon: 'success',
-        title: 'Yeay you got them',
-        input: 'text',
-        inputAttributes: {
-          autocapitalize: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Give name',
-        showLoaderOnConfirm: true,
-        preConfirm: (poke_name) => {
 
-          //collect the data
-          let data = {
-            id: pokemon.id,
-            name: poke_name,
-            base_experience: pokemon.base_experience,
-            type: pokemon.pokemon_v2_pokemontypes,
-            move: pokemon.pokemon_v2_pokemonmoves
-          };
+      //Show loading animation
+      setCatch_loading_animation(true);
 
-          //add to array
-          My_Pokemon.push(data);
+      setTimeout(() => {
 
-          localStorage.setItem('my_pokemon', JSON.stringify(My_Pokemon));
-        },
-      }).then(() => {
-        Swal.fire(
-          'Saved!',
-          'Your pokemon has been collected.',
-          'success'
-        )
-      });
+        //Hide loading animation
+        setCatch_loading_animation(false);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Yeay you got them',
+          input: 'text',
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Give name',
+          showLoaderOnConfirm: true,
+          preConfirm: (poke_name) => {
+  
+            if(pokeFind(My_Pokemon, poke_name).length > 0) {
+              
+              Swal.showValidationMessage(
+                `Name has been exist`
+              );
+              return false;
+            }
+  
+            //collect the data
+            let data = {
+              id: pokemon.id,
+              name: poke_name,
+              base_experience: pokemon.base_experience,
+              type: pokemon.pokemon_v2_pokemontypes,
+              move: pokemon.pokemon_v2_pokemonmoves
+            };
+  
+            //add to array
+            My_Pokemon.push(data);
+  
+            localStorage.setItem('my_pokemon', JSON.stringify(My_Pokemon));
+  
+            return true;
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((res) => {
+          if(res.isConfirmed){
+            Swal.fire(
+              'Saved!', 'Your pokemon has been collected.', 'success'
+            )
+          }
+        });
+      }, 1000);
+
+      
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'You havent get!'
-      });
+
+      //Show loading animation
+      setCatch_loading_animation(true);
+
+      setTimeout(() => {
+
+        //Hide loading animation
+        setCatch_loading_animation(false);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'You havent get!'
+        });
+      }, 1000);
+      
     }
   }
  
   return (
-    <section className='detail'>
+    <>
+      <div className={`overlay ${catch_loading_animation ? '' : 'd-none'}`}>
+        <img src={pokeball} className='my-5 pokeball m-auto' alt='' />
+      </div>
+    <section className='detail' data-testid='show-detail-page'>
+      
       <div className='container d-flex'>
         {
           // pokemon !== null ?
-          <div className='card mx-auto card-poke-detail'>
+          <div className='card mx-auto card-poke-detail col-lg-6 col-md-10 col-12'>
             {
               pokemon !== null ?
-              <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`} className='detail-img' />
+                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`} className='detail-img' />
               :
-              <Skeleton circle height={100} width={100} className='mx-auto' />
+              <div className={css `
+                width: 150px;
+                margin-top: -100px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 20px;
+              `}>
+                <Skeleton circle height={150} width={150} />
+              </div>
             }
             <h1 className='text-center'>
               { pokemon !== null ? pokemon.name : <Skeleton count={1} /> }
@@ -95,7 +149,6 @@ export default function Detail() {
             {
               pokemon !== null ?
               pokemon.pokemon_v2_pokemontypes.map(obj => {
-
                 return (
                   <div key={obj.id} className='alert-poke-detail text-center mx-1'>
                     {obj.pokemon_v2_type.name}
@@ -120,7 +173,6 @@ export default function Detail() {
                   )
                 }
                 
-                
               })
               :
               <Skeleton count={2} width={200} />
@@ -132,19 +184,19 @@ export default function Detail() {
             <button className='btn btn-info-gradient' onClick={catch_pokemon}>Catch now !</button>
             
           </div>
-          // :
-          // <div className={css`
-          //   width: 400px;
-          //   border-radius: 20px;
-          //   height: 60vh;
-          //   background-color: white;
-          //   padding:20px;
-          //   margin-top: 8em;
-          //   margin-left: auto;
-          //   margin-right: auto;
-          // `}><Skeleton count={1} /></div>
         }
       </div>
     </section>
+    </>
   )
 }
+
+//Find duplicate name
+function pokeFind(array, value) { 
+    
+  const data = array.filter(function(obj){     
+      return obj.name == value; 
+  });
+  return data;
+}
+

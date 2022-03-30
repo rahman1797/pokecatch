@@ -7,11 +7,13 @@ import pokeball from '../assets/images/pokeball1.png';
 
 export default function Home() {
   return (
-    <section className='home'>
+    <section className='home' data-testid='show-home-page'>
       <div className='container'>
           <div className='row'>
-            <img src={pokemon} className='mt-5 mx-auto' />
-            <img src={pokeball} className='my-5 pokeball mx-auto' />
+            <div className='col-12 d-flex'>
+              <img src={pokemon} width='250' className='mt-5 mx-auto' alt='' />
+            </div>
+            <img src={pokeball} className='my-5 pokeball mx-auto' alt='' />
           </div>
           <div className='row'>
             <Link className='mt-5 btn btn-lg btn-home-gradient mx-auto' to={'/list'}>Let's Catch em all</Link>

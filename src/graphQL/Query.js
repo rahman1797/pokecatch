@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_POKEMON = gql`
-query MyQuery($limit: Int! ) {
-  pokemon_v2_pokemon(limit: $limit, order_by: {id: asc}) {
+query MyQuery($limit: Int!, $name: String! ) {
+  pokemon_v2_pokemon(limit: $limit, order_by: {id: asc}, where: {name: {_iregex: $name}}) {
     name
     id
     base_experience
@@ -10,9 +10,18 @@ query MyQuery($limit: Int! ) {
 }
 `;
 
-export const MY_POKEMON = gql`
-query MyQuery ($id: String!) {
-  pokemon_v2_pokemon(where: {id: {_similar: $id}}, order_by: {id: asc}) {
+// export const MY_POKEMON = gql`
+// query MyQuery ($id: String!) {
+//   pokemon_v2_pokemon(where: {id: {_similar: $id}}, order_by: {id: asc}) {
+//     name
+//     id
+//   }
+// }
+// `;
+
+export const EXTEND_SEARCH_POKEMON = gql`
+query MyQuery ($name: String!) {
+  pokemon_v2_pokemon(where: {name: {_iregex: $name}}, order_by: {id: asc}) {
     name
     id
   }

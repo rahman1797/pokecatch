@@ -1,4 +1,5 @@
-import { Routes, Route, Link } from "react-router-dom";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
 //Style
 import './App.css';
@@ -12,15 +13,15 @@ import MyList from "./pages/MyList";
 
 function App() {
   return (
-    <>
+    <div data-testid='show-entire-page'>
       <Header/>
       <Routes>
-        <Route path="/" element={<Home />} exact />
+        <Route path="/" exact element={<Home />} />
         <Route path="/list" exact element={<List />} />
         <Route path="/my-list" exact element={<MyList />} />
         <Route path="/detail/:name" exact element={<Detail />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
