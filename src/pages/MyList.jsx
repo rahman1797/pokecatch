@@ -5,9 +5,16 @@ import { css } from '@emotion/css';
 export default function MyList() {
 
   var My_Pokemon = JSON.parse(localStorage.getItem("my_pokemon") || "[]");
+  
+  //Sort by catch date
+  My_Pokemon.sort((a, b) => {
+      return b.catch_date - a.catch_date;
+  });
 
+  //Save to state
   const [pokemon, setPokemon] = useState(My_Pokemon);
 
+  //Release pokemon by name
   const release_pokemon = (event, name ) => {
     event.preventDefault();
     Swal.fire({
@@ -36,6 +43,7 @@ export default function MyList() {
     return false;
   }
 
+  //Release all pokemon by clear localStorage
   const release_all = (event ) => {
     event.preventDefault();
     Swal.fire({
@@ -62,11 +70,12 @@ export default function MyList() {
     return false;
   }
 
+  //Search pokemon
   const searchPokemon = (event) => {
     let value = event.target.value;
-
+    
     setPokemon(My_Pokemon.filter((obj) => 
-    new RegExp(value, 'i').exec(obj.name)));
+      new RegExp(value, 'i').exec(obj.name)));
   }
 
   return (
@@ -83,7 +92,7 @@ export default function MyList() {
 
         {pokemon.map(obj => {
           return (
-            <div key={obj.id} className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
+            <div key={obj.name} className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
                 <div className='card-poke-list'>
                   <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${obj.id}.svg`} className={`mx-auto poke-img`} />
                   <p className={css`
@@ -93,13 +102,14 @@ export default function MyList() {
                   <p>
                     Base Exp. {obj.base_experience}
                   </p>
+                  <p>{obj.catch_date}</p>
                   <strong>Type</strong>
                     <div className='row'>
                       <div className='container pb-3'>
                       {
                         obj.type.map(obj => {
                           return (
-                            <div key={obj.name} className='m-1 p-1 alert-poke-detail text-center'>
+                            <div key={obj.pokemon_v2_type.name} className='m-1 p-1 alert-poke-detail text-center'>
                               {obj.pokemon_v2_type.name}
                             </div>
                           )

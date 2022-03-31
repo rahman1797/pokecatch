@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_DETAIL_POKEMON } from "../graphQL/Query";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import Swal from "sweetalert2";
@@ -13,7 +13,8 @@ export default function Detail() {
   //Init state
   const [pokemon, setPokemon] = useState(null);
   const [catch_loading_animation, setCatch_loading_animation] = useState(false);
-
+  
+  let navigate = useNavigate();
   const POKEMON_NAME = useParams(); //Get parameter "name"
 
   //Get data from API with filtering
@@ -56,7 +57,8 @@ export default function Detail() {
           confirmButtonText: 'Give name',
           showLoaderOnConfirm: true,
           preConfirm: (poke_name) => {
-  
+            
+            //Save to localStorage if name not duplicate
             if(pokeFind(My_Pokemon, poke_name).length > 0) {
               
               Swal.showValidationMessage(
@@ -67,6 +69,7 @@ export default function Detail() {
   
             //collect the data
             let data = {
+              catch_date: new Date().getTime(),
               id: pokemon.id,
               name: poke_name,
               base_experience: pokemon.base_experience,
@@ -88,6 +91,7 @@ export default function Detail() {
               'Saved!', 'Your pokemon has been collected.', 'success'
             )
           }
+          return navigate(`/list`);
         });
       }, 1000);
 
@@ -105,7 +109,7 @@ export default function Detail() {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'You havent get!'
+          text: 'They run away, try again next time!'
         });
       }, 1000);
       
