@@ -19,14 +19,14 @@ query MyQuery($limit: Int!, $name: String! ) {
 // }
 // `;
 
-export const EXTEND_SEARCH_POKEMON = gql`
-query MyQuery ($name: String!) {
-  pokemon_v2_pokemon(where: {name: {_iregex: $name}}, order_by: {id: asc}) {
-    name
-    id
-  }
-}
-`;
+// export const EXTEND_SEARCH_POKEMON = gql`
+// query MyQuery ($name: String!) {
+//   pokemon_v2_pokemon(where: {name: {_iregex: $name}}, order_by: {id: asc}) {
+//     name
+//     id
+//   }
+// }
+// `;
 
 export const GET_DETAIL_POKEMON = gql`
   query MyQuery ($name: String!) {

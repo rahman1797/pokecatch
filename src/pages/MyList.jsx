@@ -94,7 +94,7 @@ export default function MyList() {
           return (
             <div key={obj.name} className='col-lg-2 col-md-3 col-sm-4 col-4 text-center list-layout' to={`/detail/${obj.name}`}>
                 <div className='card-poke-list'>
-                  <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${obj.id}.svg`} className={`mx-auto poke-img`} />
+                  <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${obj.id}.svg`} className={`mx-auto poke-img`} alt='' />
                   <p className={css`
                     margin-top: 2em;
                     font-size:1.2em;
@@ -102,7 +102,6 @@ export default function MyList() {
                   <p>
                     Base Exp. {obj.base_experience}
                   </p>
-                  <p>{obj.catch_date}</p>
                   <strong>Type</strong>
                     <div className='row'>
                       <div className='container pb-3'>

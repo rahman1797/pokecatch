@@ -10,10 +10,6 @@ import pokeball from '../assets/images/pokeball1.png';
 
 export default function Detail() {
 
-  //Init state
-  const [pokemon, setPokemon] = useState(null);
-  const [catch_loading_animation, setCatch_loading_animation] = useState(false);
-  
   let navigate = useNavigate();
   const POKEMON_NAME = useParams(); //Get parameter "name"
 
@@ -21,16 +17,19 @@ export default function Detail() {
   const { loading, error, data } = useQuery(GET_DETAIL_POKEMON, {
     variables: { name: POKEMON_NAME.name }
   });
+
+  //Init state
+  const [pokemon, setPokemon] = useState(null);
+  const [catch_loading_animation, setCatch_loading_animation] = useState(false);
+  const [loadingFetch, setLoadingFetch] = useState(loading);
   
   //Get data from browser local storage
   var My_Pokemon = JSON.parse(localStorage.getItem("my_pokemon") || "[]");
 
   useEffect(() => {
     if(loading === false){
-      setTimeout(() => {
-        setPokemon(data.pokemon_v2_pokemon[0]);
-      }, 200)
-      
+      setPokemon(data.pokemon_v2_pokemon[0]);
+      setLoadingFetch(false);
     }
   }, [loading, data]);
 
@@ -38,7 +37,7 @@ export default function Detail() {
     let number = Math.floor(Math.random() * 101); //Random number from 0 - 100
     if(number >= 50){
 
-      //Show loading animation
+      //Show loading animation (1 sec)
       setCatch_loading_animation(true);
 
       setTimeout(() => {
@@ -59,10 +58,17 @@ export default function Detail() {
           preConfirm: (poke_name) => {
             
             //Save to localStorage if name not duplicate
+            //If name duplicate
             if(pokeFind(My_Pokemon, poke_name).length > 0) {
-              
               Swal.showValidationMessage(
                 `Name has been exist`
+              );
+              return false;
+            }
+            //If give name was empty string
+            else if(poke_name.length === 0 || poke_name === "") {
+              Swal.showValidationMessage(
+                `Enter your pokemon name first`
               );
               return false;
             }
@@ -84,7 +90,6 @@ export default function Detail() {
   
             return true;
           },
-          allowOutsideClick: () => !Swal.isLoading()
         }).then((res) => {
           if(res.isConfirmed){
             Swal.fire(
@@ -129,7 +134,7 @@ export default function Detail() {
           <div className='card mx-auto card-poke-detail col-lg-6 col-md-10 col-12'>
             {
               pokemon !== null ?
-                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`} className='detail-img' />
+                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`} className='detail-img' alt='' />
               :
               <div className={css `
                 width: 150px;
@@ -154,7 +159,7 @@ export default function Detail() {
               pokemon !== null ?
               pokemon.pokemon_v2_pokemontypes.map(obj => {
                 return (
-                  <div key={obj.id} className='alert-poke-detail text-center mx-1'>
+                  <div key={obj.pokemon_v2_type.name} className='alert-poke-detail text-center mx-1'>
                     {obj.pokemon_v2_type.name}
                   </div>
                 )
@@ -171,7 +176,7 @@ export default function Detail() {
               pokemon.pokemon_v2_pokemonmoves.map((obj, index) => {
                 if(index < 6) {
                   return (
-                    <div key={obj.id} className='alert-poke-detail text-center m-1'>
+                    <div key={index} className='alert-poke-detail text-center m-1'>
                       { obj.pokemon_v2_move.name }
                     </div>
                   )
@@ -184,8 +189,10 @@ export default function Detail() {
             
             </div>
             <span className='text-center my-2'>{ pokemon !== null ? (pokemon.pokemon_v2_pokemonmoves.length > 6 ? `and ${ pokemon.pokemon_v2_pokemonmoves.length - 6 } more` : '') : <Skeleton /> }</span>
-
-            <button className='btn btn-info-gradient' onClick={catch_pokemon}>Catch now !</button>
+            
+            {
+              pokemon !== null ? <button className='btn btn-info-gradient' onClick={catch_pokemon}>Catch now !</button> : <Skeleton />
+            }
             
           </div>
         }
@@ -196,10 +203,9 @@ export default function Detail() {
 }
 
 //Find duplicate name
-function pokeFind(array, value) { 
-    
+function pokeFind(array, value) {    
   const data = array.filter(function(obj){     
-      return obj.name == value; 
+      return obj.name === value; 
   });
   return data;
 }
